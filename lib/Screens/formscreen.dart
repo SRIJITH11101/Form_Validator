@@ -120,7 +120,10 @@ class _FormScreenState extends State<FormScreen> {
                     'Date of Birth :',
                     style: qStyle,
                   ),
-                  dobTextFieldWidget(dobcontroller: dobcontroller),
+                  dobTextFieldWidget(
+                    dobcontroller: dobcontroller,
+                    isFilled: true,
+                  ),
                   CupertinoButton(
                       child: Text('Pick Your Birth Date'),
                       onPressed: () {

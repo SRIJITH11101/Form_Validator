@@ -61,10 +61,13 @@ class Validate {
     } else {
       if (stDob == "") {
         showsSnackbar(context: context, content: "Please pick the DOB");
+        dobDone = false;
+        return false;
+      } else {
+        showsSnackbar(context: context, content: "Invalid DOB");
+        dobDone = false;
+        return false;
       }
-      showsSnackbar(context: context, content: "Invalid DOB");
-      dobDone = false;
-      return false;
     }
   }
 

@@ -62,6 +62,7 @@ class _SecFormScreenState extends State<SecFormScreen> {
   bool value2 = false;
   bool value3 = false;
   bool value4 = false;
+  bool dobisFilled = false;
   String? answer;
   String? gender;
   String? password;
@@ -124,7 +125,10 @@ class _SecFormScreenState extends State<SecFormScreen> {
                 'Date of Birth :',
                 style: qStyle,
               ),
-              dobTextFieldWidget(dobcontroller: dobcontroller),
+              dobTextFieldWidget(
+                dobcontroller: dobcontroller,
+                isFilled: dobisFilled,
+              ),
               CupertinoButton(
                   child: Text('Pick Your Birth Date'),
                   onPressed: () {
@@ -139,6 +143,9 @@ class _SecFormScreenState extends State<SecFormScreen> {
                               onDateTimeChanged: (value) {
                                 setState(() {
                                   dob = value;
+                                  if (dobcontroller.text.isNotEmpty) {
+                                    dobisFilled = true;
+                                  }
                                 });
                                 formatdob =
                                     DateFormat('dd-MM-yyyy').format(dob);
