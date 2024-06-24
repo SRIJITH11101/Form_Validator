@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "897408699470",
+    "project_id": "formscreen-c4e4f",
+    "storage_bucket": "formscreen-c4e4f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:897408699470:android:74406560589ce004d1871f",
+        "android_client_info": {
+          "package_name": "com.example.task_01"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSk8hwXlyfG1CXYFDbgvhgzj8AENy87cI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

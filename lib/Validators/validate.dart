@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_01/Models/userData.dart';
+import 'package:task_01/Screens/formscreen2.dart';
 import 'package:task_01/Screens/submitscreen.dart';
 import 'package:task_01/Widgets/snackbar.dart';
 import 'package:task_01/constants.dart';
@@ -10,7 +11,8 @@ class Validate {
       passDone = false,
       expDone = false,
       genderDone = false,
-      hobbiesDone = false;
+      hobbiesDone = false,
+      reseting = false;
   String name = '';
   String email = "";
   String stdob = "";
@@ -123,13 +125,19 @@ class Validate {
     }
   }
 
-  void submitForm(BuildContext context) {
+  bool resetForm() {
+    hobbies = [];
+    return reseting;
+  }
+
+  Future<bool> submitForm(BuildContext context) async {
     if (dobDone == true &&
         emailDone == true &&
         passDone == true &&
         expDone == true &&
         genderDone == true &&
         hobbiesDone == true) {
+      print(hobbies);
       UserData userData = UserData(
         name: name,
         email: email,
@@ -138,17 +146,21 @@ class Validate {
         gender: genders,
         hobbies: hobbies,
       );
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => SubmitScreen(
-                    userData: userData,
-                  )));
-      //return true;
+      print('Hobbies in UserData: ${userData.hobbies}');
+      bool response = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => SubmitScreen(userData: userData)),
+      );
+      if (response) {
+        reseting = true;
+      }
     } else {
       showsSnackbar(
           context: context,
           content: "Some validation failed, Retify it and try again.");
+      reseting = false;
     }
+    return reseting;
   }
 }

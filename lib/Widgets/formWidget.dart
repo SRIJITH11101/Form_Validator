@@ -28,6 +28,7 @@ class _FormWidgetState extends State<FormWidget> {
   String name = "";
   String email = "";
   String pass = "";
+  bool isPressed = false;
 
   final regex = RegExp(pattern);
   final passRegex = RegExp(passPattern);
@@ -51,24 +52,37 @@ class _FormWidgetState extends State<FormWidget> {
                   SizedBox(
                     width: 20,
                   ),
-                  Container(
-                    height: 40,
-                    width: 200,
-                    child: TextFormField(
-                      controller: widget.nameController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter the Name',
+                  Padding(
+                    padding: const EdgeInsets.only(top: 18),
+                    child: Container(
+                      height: 40,
+                      width: 200,
+                      child: TextFormField(
+                        controller: widget.nameController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter the Name',
+                          errorStyle: TextStyle(
+                              height: 0), // Reduce the error text height to 0
+                          helperText: ' ',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the Name';
+                          } else if (value.length == 1) {
+                            return 'Please a proper name';
+                          } else {
+                            return null;
+                          }
+                        },
+                        onChanged: (value) {
+                          if (FormWidget.formKey.currentState!.validate()) {
+                            return null;
+                          }
+                        },
+                        onSaved: (newValue) {
+                          name = newValue!;
+                        },
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter the Name';
-                        } else {
-                          return null;
-                        }
-                      },
-                      onSaved: (newValue) {
-                        name = newValue!;
-                      },
                     ),
                   ),
                 ],
@@ -85,26 +99,37 @@ class _FormWidgetState extends State<FormWidget> {
                   SizedBox(
                     width: 20,
                   ),
-                  Container(
-                    height: 40,
-                    width: 200,
-                    child: TextFormField(
-                      controller: widget.emailController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter the Email',
+                  Padding(
+                    padding: const EdgeInsets.only(top: 18),
+                    child: Container(
+                      height: 40,
+                      width: 200,
+                      child: TextFormField(
+                        controller: widget.emailController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter the Email',
+                          errorStyle: TextStyle(
+                              height: 0), // Reduce the error text height to 0
+                          helperText: ' ',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the Email';
+                          } else if (!regex.hasMatch(value)) {
+                            return 'Invalid Email';
+                          } else {
+                            return null;
+                          }
+                        },
+                        onChanged: (value) {
+                          if (FormWidget.formKey.currentState!.validate()) {
+                            return null;
+                          }
+                        },
+                        onSaved: (newValue) {
+                          email = newValue!;
+                        },
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter the Email';
-                        } else if (!regex.hasMatch(value)) {
-                          return 'Invalid Email';
-                        } else {
-                          return null;
-                        }
-                      },
-                      onSaved: (newValue) {
-                        email = newValue!;
-                      },
                     ),
                   ),
                 ],
@@ -121,27 +146,39 @@ class _FormWidgetState extends State<FormWidget> {
                   SizedBox(
                     width: 20,
                   ),
-                  Container(
-                    height: 40,
-                    width: 200,
-                    child: TextFormField(
-                      controller: widget.passController,
-                      decoration: InputDecoration(
-                        hintText: 'Enter the Password',
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter the Password';
-                        } else if (!passRegex.hasMatch(value)) {
-                          return 'Invalid Password';
-                        } else {
+                  Padding(
+                    padding: const EdgeInsets.only(top: 18.0),
+                    child: Container(
+                      height: 40,
+                      width: 200,
+                      child: TextFormField(
+                        controller: widget.passController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter the Password',
+                          errorStyle: TextStyle(
+                              height: 0), // Reduce the error text height to 0
+                          helperText: ' ',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the Password';
+                          } else if (!passRegex.hasMatch(value)) {
+                            return 'Invalid Password';
+                          } else {
+                            pass = value;
+                            return null;
+                          }
+                        },
+                        onChanged: (value) {
                           pass = value;
-                          return null;
-                        }
-                      },
-                      onSaved: (newValue) {
-                        email = newValue!;
-                      },
+                          if (FormWidget.formKey.currentState!.validate()) {
+                            return null;
+                          }
+                        },
+                        onSaved: (newValue) {
+                          pass = newValue!;
+                        },
+                      ),
                     ),
                   ),
                 ],
@@ -156,28 +193,56 @@ class _FormWidgetState extends State<FormWidget> {
               SizedBox(
                 height: 25,
               ),
-              Container(
-                height: 40,
-                width: 200,
-                child: TextFormField(
-                  obscureText: true,
-                  controller: widget.cpassController,
-                  decoration: InputDecoration(
-                    hintText: 'Confirm the Password',
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: SizedBox(
+                  height: 70,
+                  width: 230,
+                  child: TextFormField(
+                    obscureText: isPressed ? false : true,
+                    controller: widget.cpassController,
+                    decoration: InputDecoration(
+                      errorStyle: TextStyle(
+                          height: 0), // Reduce the error text height to 0
+                      helperText: ' ',
+                      suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              if (isPressed) {
+                                isPressed = false;
+                              } else {
+                                isPressed = true;
+                              }
+                            });
+                          },
+                          icon: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Icon(isPressed
+                                ? Icons.visibility
+                                : Icons.visibility_off),
+                          )),
+                      hintText: 'Confirm the Password',
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter the Password';
+                      } else if (pass != value) {
+                        return 'Passwords not matching';
+                      } else {
+                        //pass = value;
+                        return null;
+                      }
+                    },
+                    onChanged: (value) {
+                      if (FormWidget.formKey.currentState!.validate()) {
+                        return null;
+                      }
+                    },
+                    //onTapOutside: ,
+                    onSaved: (newValue) {
+                      email = newValue!;
+                    },
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the Password';
-                    } else if (pass != value) {
-                      return 'Passwords not matching';
-                    } else {
-                      //pass = value;
-                      return null;
-                    }
-                  },
-                  onSaved: (newValue) {
-                    email = newValue!;
-                  },
                 ),
               ),
               SizedBox(

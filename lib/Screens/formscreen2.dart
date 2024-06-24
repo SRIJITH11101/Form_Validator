@@ -19,9 +19,15 @@ class SecFormScreen extends StatefulWidget {
 class _SecFormScreenState extends State<SecFormScreen> {
   final GlobalKey<FormState> txtformKey = FormWidget.formKey;
 
-  void submitForm(
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  Future<void> submitForm(
     BuildContext context,
-  ) {
+  ) async {
     if (txtformKey.currentState!.validate()) {
       txtformKey.currentState!.save();
 
@@ -34,7 +40,27 @@ class _SecFormScreenState extends State<SecFormScreen> {
               if (ob.workExpCheck(expvalue, answer, context)) {
                 if (ob.genderCheck(genderValue, gender, context)) {
                   if (ob.hobbiesCheck(interests, context)) {
-                    ob.submitForm(context);
+                    //ob.submitForm(context);
+                    if (await ob.submitForm(context)) {
+                      setState(() {
+                        nameController.clear();
+                        emailController.clear();
+                        passController.clear();
+                        cpassController.clear();
+                        dobcontroller.clear();
+                        dob = DateTime.now();
+                        formatdob = "";
+                        expvalue = 0;
+                        genderValue = 0;
+                        interests.clear();
+                        hobbiesState.updateAll((key, value) => false);
+                        dobisFilled = false;
+                        answer = null;
+                        gender = null;
+                        password = null;
+                        confpassword = null;
+                      });
+                    }
                   }
                 }
               }
@@ -109,7 +135,7 @@ class _SecFormScreenState extends State<SecFormScreen> {
                   style: qStyle,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               FormWidget(
@@ -118,10 +144,10 @@ class _SecFormScreenState extends State<SecFormScreen> {
                 passController: passController,
                 cpassController: cpassController,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              Text(
+              const Text(
                 'Date of Birth :',
                 style: qStyle,
               ),
@@ -130,38 +156,63 @@ class _SecFormScreenState extends State<SecFormScreen> {
                 isFilled: dobisFilled,
               ),
               CupertinoButton(
-                  child: Text('Pick Your Birth Date'),
+                  child: const Text('Pick Your Birth Date'),
                   onPressed: () {
                     showCupertinoModalPopup(
                         context: context,
-                        builder: (BuildContext context) => SizedBox(
-                            height: 200,
-                            child: CupertinoDatePicker(
-                              backgroundColor: Colors.blueGrey[200],
-                              mode: CupertinoDatePickerMode.date,
-                              initialDateTime: DateTime(2000, 1, 1),
-                              onDateTimeChanged: (value) {
-                                setState(() {
-                                  dob = value;
-                                  if (dobcontroller.text.isNotEmpty) {
-                                    dobisFilled = true;
-                                  }
-                                });
-                                formatdob =
-                                    DateFormat('dd-MM-yyyy').format(dob);
-                                dobcontroller.text = formatdob;
-                                //ob.dobVerify(dob, formatdob, context);
-                                // //print(dob);
-                                // formatdob =
-                                //     DateFormat('yyyy-mm-dd').format(dob);
-                                // print(formatdob);
-                              },
-                            )));
+                        builder: (BuildContext context) => Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Align(
+                                      alignment: Alignment.topRight,
+                                      child: Container(
+                                          height: 40,
+                                          width: 100,
+                                          color: Colors.orange,
+                                          child: Center(
+                                              child: Text(
+                                            'Done',
+                                            style: TextStyle(fontSize: 20),
+                                          ))),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                    height: 200,
+                                    child: CupertinoDatePicker(
+                                      backgroundColor: Colors.blueGrey[200],
+                                      mode: CupertinoDatePickerMode.date,
+                                      initialDateTime: DateTime(2000, 1, 1),
+                                      onDateTimeChanged: (value) {
+                                        setState(() {
+                                          dob = value;
+                                          if (dobcontroller.text.isNotEmpty) {
+                                            dobisFilled = true;
+                                          }
+                                        });
+                                        formatdob = DateFormat('dd-MM-yyyy')
+                                            .format(dob);
+                                        dobcontroller.text = formatdob;
+                                        //ob.dobVerify(dob, formatdob, context);
+                                        // //print(dob);
+                                        // formatdob =
+                                        //     DateFormat('yyyy-mm-dd').format(dob);
+                                        // print(formatdob);
+                                      },
+                                    )),
+                              ],
+                            ));
                   }),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              Text(
+              const Text(
                 'Do you have work experience?',
                 style: qStyle,
               ),
@@ -182,10 +233,10 @@ class _SecFormScreenState extends State<SecFormScreen> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              Text(
+              const Text(
                 'Gender dropdown',
                 style: qStyle,
               ),
@@ -194,8 +245,8 @@ class _SecFormScreenState extends State<SecFormScreen> {
                 value: gender,
                 items: genders.map((gen) {
                   return DropdownMenuItem(
-                    child: Text(gen),
                     value: gen,
+                    child: Text(gen),
                   );
                 }).toList(),
                 onChanged: (value) {
@@ -206,10 +257,10 @@ class _SecFormScreenState extends State<SecFormScreen> {
                 },
               ),
 
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              Text(
+              const Text(
                 'Hobbies',
                 style: qStyle,
               ),
@@ -241,7 +292,7 @@ class _SecFormScreenState extends State<SecFormScreen> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
             ]),
