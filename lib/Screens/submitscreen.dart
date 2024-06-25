@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:task_01/Models/userData.dart';
 import 'package:task_01/Repository/user_repository.dart';
+import 'package:task_01/Screens/fetched_screen.dart';
 import 'package:task_01/Validators/validate.dart';
 import 'package:task_01/constants.dart';
 import 'package:uuid/uuid.dart';
@@ -111,26 +112,31 @@ class SubmitScreen extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                UserRepository(context,
-                        firestore: FirebaseFirestore.instance,
-                        uid: uid,
-                        userdetails: userData)
-                    .getUserData();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => FetchedScreen(
+                            userdata: userData,
+                            uid: uid,
+                          )),
+                );
               },
               child: Align(
                 alignment: Alignment.center,
                 child: Container(
-                    height: 40,
-                    width: 250,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.brown[800]),
-                    //color: Colors.orange,
-                    child: Center(
-                        child: Text(
+                  height: 40,
+                  width: 280,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.brown[800]),
+                  //color: Colors.orange,
+                  child: Center(
+                    child: Text(
                       'Fetch data from Firebase',
                       style: qStyle.copyWith(color: Colors.white),
-                    ))),
+                    ),
+                  ),
+                ),
               ),
             ),
           ],

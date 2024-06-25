@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:task_01/Models/UserApi.dart';
 import 'package:task_01/Validators/validate.dart';
 import 'package:task_01/constants.dart';
 
@@ -29,6 +30,7 @@ class _FormWidgetState extends State<FormWidget> {
   String email = "";
   String pass = "";
   bool isPressed = false;
+  bool verified = false;
 
   final regex = RegExp(pattern);
   final passRegex = RegExp(passPattern);
@@ -44,6 +46,7 @@ class _FormWidgetState extends State<FormWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                //mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     'Name :',
@@ -91,6 +94,7 @@ class _FormWidgetState extends State<FormWidget> {
                 height: 20,
               ),
               Row(
+                //mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(
                     'Email :',
@@ -103,7 +107,7 @@ class _FormWidgetState extends State<FormWidget> {
                     padding: const EdgeInsets.only(top: 18),
                     child: Container(
                       height: 40,
-                      width: 200,
+                      width: 195,
                       child: TextFormField(
                         controller: widget.emailController,
                         decoration: InputDecoration(
@@ -117,21 +121,39 @@ class _FormWidgetState extends State<FormWidget> {
                             return 'Please enter the Email';
                           } else if (!regex.hasMatch(value)) {
                             return 'Invalid Email';
+                          } else if (!verified) {
+                            return 'Verification failed';
                           } else {
                             return null;
                           }
                         },
                         onChanged: (value) {
+                          email = value;
                           if (FormWidget.formKey.currentState!.validate()) {
                             return null;
                           }
                         },
                         onSaved: (newValue) {
                           email = newValue!;
+                          //UserApi().getEmail(email);
                         },
                       ),
                     ),
                   ),
+                  TextButton(
+                      onPressed: () async {
+                        //print(email);
+                        bool ans = await UserApi().getEmail(context, email);
+                        setState(() {
+                          verified = ans;
+                        });
+                        FormWidget.formKey.currentState!.validate();
+                        print(ans);
+                      },
+                      child: Text(
+                        "Verify",
+                        style: TextStyle(fontSize: 15),
+                      ))
                 ],
               ),
               SizedBox(
@@ -152,6 +174,7 @@ class _FormWidgetState extends State<FormWidget> {
                       height: 40,
                       width: 200,
                       child: TextFormField(
+                        readOnly: !verified,
                         controller: widget.passController,
                         decoration: InputDecoration(
                           hintText: 'Enter the Password',
@@ -160,7 +183,9 @@ class _FormWidgetState extends State<FormWidget> {
                           helperText: ' ',
                         ),
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
+                          if (!verified) {
+                            return 'Verify the Email';
+                          } else if (value == null || value.isEmpty) {
                             return 'Please enter the Password';
                           } else if (!passRegex.hasMatch(value)) {
                             return 'Invalid Password';
@@ -199,6 +224,7 @@ class _FormWidgetState extends State<FormWidget> {
                   height: 70,
                   width: 230,
                   child: TextFormField(
+                    readOnly: !verified,
                     obscureText: isPressed ? false : true,
                     controller: widget.cpassController,
                     decoration: InputDecoration(
@@ -224,7 +250,9 @@ class _FormWidgetState extends State<FormWidget> {
                       hintText: 'Confirm the Password',
                     ),
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
+                      if (!verified) {
+                        return 'Verify the Email';
+                      } else if (value == null || value.isEmpty) {
                         return 'Please enter the Password';
                       } else if (pass != value) {
                         return 'Passwords not matching';
@@ -240,7 +268,7 @@ class _FormWidgetState extends State<FormWidget> {
                     },
                     //onTapOutside: ,
                     onSaved: (newValue) {
-                      email = newValue!;
+                      pass = newValue!;
                     },
                   ),
                 ),

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:task_01/Models/UserApi.dart';
 import 'package:task_01/Validators/validate.dart';
 import 'package:task_01/Widgets/dobFieldWidget.dart';
 import 'package:task_01/Widgets/formWidget.dart';
@@ -24,6 +25,12 @@ class _SecFormScreenState extends State<SecFormScreen> {
     // TODO: implement initState
     super.initState();
   }
+
+  // void getEmail() {
+  //   String email = UserApi().getEmail().toString();
+  //   print(email);
+  //   //return email;
+  // }
 
   Future<void> submitForm(
     BuildContext context,
@@ -294,6 +301,24 @@ class _SecFormScreenState extends State<SecFormScreen> {
               ),
               const SizedBox(
                 height: 20,
+              ),
+              Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.brown[800]),
+                  height: 50,
+                  width: MediaQuery.of(context).size.width / 3,
+                  child: GestureDetector(
+                    child: Center(
+                      child: Text(
+                        'Api call',
+                        style: qStyle.copyWith(color: Colors.white),
+                      ),
+                    ),
+                    onTap: () {},
+                  ),
+                ),
               ),
             ]),
           ),
