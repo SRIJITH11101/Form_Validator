@@ -31,7 +31,7 @@ class _FormWidgetState extends State<FormWidget> {
   String pass = "";
   bool isPressed = false;
   bool verified = false;
-
+  bool pressed = false;
   final regex = RegExp(pattern);
   final passRegex = RegExp(passPattern);
   //static final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -140,20 +140,35 @@ class _FormWidgetState extends State<FormWidget> {
                       ),
                     ),
                   ),
-                  TextButton(
-                      onPressed: () async {
-                        //print(email);
-                        bool ans = await UserApi().getEmail(context, email);
-                        setState(() {
-                          verified = ans;
-                        });
-                        FormWidget.formKey.currentState!.validate();
-                        print(ans);
-                      },
-                      child: Text(
-                        "Verify",
-                        style: TextStyle(fontSize: 15),
-                      ))
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: pressed ? CircularProgressIndicator() : null),
+                      TextButton(
+                          onPressed: () async {
+                            //print(email);
+                            setState(() {
+                              pressed = true;
+                            });
+
+                            bool ans =
+                                await UserApi().getEmailhttp(context, email);
+                            setState(() {
+                              verified = ans;
+                              pressed = false;
+                            });
+                            FormWidget.formKey.currentState!.validate();
+                            print(ans);
+                          },
+                          child: Text(
+                            "Verify",
+                            style: TextStyle(fontSize: 15),
+                          )),
+                    ],
+                  )
                 ],
               ),
               SizedBox(
@@ -174,6 +189,7 @@ class _FormWidgetState extends State<FormWidget> {
                       height: 40,
                       width: 200,
                       child: TextFormField(
+                        keyboardType: TextInputType.visiblePassword,
                         readOnly: !verified,
                         controller: widget.passController,
                         decoration: InputDecoration(
